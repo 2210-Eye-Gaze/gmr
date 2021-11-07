@@ -247,9 +247,6 @@ class GMM(object):
 
         This is an implementation of
 
-        Chen et al., “Shrinkage Algorithms for MMSE Covariance Estimation”,
-        IEEE Trans. on Sign. Proc., Volume 58, Issue 10, October 2010.
-
         based on the implementation of scikit-learn:
 
         https://scikit-learn.org/stable/modules/generated/oas-function.html#sklearn.covariance.oas
