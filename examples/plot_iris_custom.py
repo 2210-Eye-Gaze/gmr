@@ -28,10 +28,19 @@ X_pca = np.array(zip(x, y))
 # X_pca = PCA(n_components=2, whiten=True, random_state=0).fit_transform(X)
 
 gmm = GMM(n_components=3, random_state=1)
-gmm.from_samples(X_pca)
 
-plt.figure()
-ax = plt.subplot(111)
-ax.scatter(x, y)
-plot_error_ellipses(ax, gmm, alpha=0.1, colors=["r", "g", "b"])
-plt.show()
+for i in range(10):
+    gmm.from_samples(X_pca, n_iter=i)
+    if i == 0:
+        print(gmm.means)
+
+    plt.figure()
+    ax = plt.subplot(111)
+    ax.scatter(x, y)
+    plot_error_ellipses(ax, gmm, alpha=0.1, colors=["r", "g", "b"])
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.title('GMM Model Training')
+    # plt.show()
+    # Save the plots
+    plt.savefig('GMM_anim' + str(i) + '.png')

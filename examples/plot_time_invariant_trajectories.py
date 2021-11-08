@@ -31,7 +31,7 @@ from sklearn.mixture import BayesianGaussianMixture
 from gmr import GMM
 
 
-paths = svg2paths("examples/8_plain.svg")[0]  # only works if started from gmr's root directory
+paths = svg2paths("8_plain.svg")[0]  # only works if started from gmr's root directory
 assert len(paths) == 1
 path = paths[0]
 
