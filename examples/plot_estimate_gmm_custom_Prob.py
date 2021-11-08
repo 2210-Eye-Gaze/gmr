@@ -14,6 +14,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from gmr.utils import check_random_state
 from gmr import GMM, plot_error_ellipses
+from matplotlib import collections  as mc
+
 
 
 UPPER_LIMIT = 3
@@ -56,12 +58,19 @@ gmm.from_samples(X)
 
 # plt.subplot(1, 3, 2)
 
+# lines = [[(0, 1), (1, 1)], [(2, 3), (3, 3)], [(1, 2), (1, 3)]]
+lines = []
+prev = None
+# c = np.array([(1, 1, 1, 1), (0, 1, 0, 1), (0, 0, 1, 1)])
+c = []
+
 X_sampled = gmm.sample(100)
+SAMPLES = 50
 count = 0
-for i in np.linspace(-3,4,20):
+for i in np.linspace(-3,4, SAMPLES):
     plt.figure(figsize=(10, 5))
 
-    plt.subplot(1, 2, 1)
+    ax = plt.subplot(1, 2, 1)
     plt.title("Probability Density and Samples")
     plt.xlim((LOWER_LIMIT, UPPER_LIMIT))
     plt.ylim((LOWER_LIMIT, UPPER_LIMIT))
@@ -69,18 +78,37 @@ for i in np.linspace(-3,4,20):
     X_test = np.vstack((x.ravel(), y.ravel())).T
     p = gmm.to_probability_density(X_test)
     p = p.reshape(*x.shape)
-    plt.contourf(x, y, p)
+    plt.contourf(x, y, p, colors=('#FEE89F', '#D0F87C', '#58F5A9', '#19E5E3', '#41B0F1', '#3C7DE4', '#2B4BE6', '#08249D'))
     s = [2] * 100
     plt.scatter(X_sampled[:, 0], X_sampled[:, 1], c="pink", s=s)
     plt.xlabel('x')
     plt.ylabel('y')
-    plt.axvline(x=i, c='y')
+
+
+    interception_x = i
+    plt.axvline(x=interception_x, c='y')
 
     X_test = np.linspace(LOWER_LIMIT, UPPER_LIMIT, 100)
     cond = gmm.condition(np.array([0]), np.array([i]))
     y = cond.to_probability_density(X_test[:, np.newaxis])
     # print(np.argmax(y)*STEP + LOWER_LIMIT)
-    plt.axhline(y=np.argmax(y)*STEP + LOWER_LIMIT, c='orange')
+    interception_y = np.argmax(y)*STEP + LOWER_LIMIT
+    plt.axhline(y=interception_y, c='orange')
+
+    if prev:
+        curr = (interception_x, interception_y)
+        lines.append([prev, curr])
+        # print(lines)
+        prev = curr
+
+        c = [(0, 0, 0)] * count
+        c = np.array(c)
+        lc = mc.LineCollection(lines, colors=c, linewidths=2)
+        # fig, ax = plt.subplots()
+        ax.add_collection(lc)
+    else:
+        prev = (interception_x, interception_y)
+        
     
     plt.subplot(1, 2, 2)
     title = "Conditional PDF $p(y | x = " + str(round(i, 2)) + ")$"
