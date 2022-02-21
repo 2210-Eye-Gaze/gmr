@@ -68,9 +68,9 @@ X_sampled = gmm.sample(100)
 SAMPLES = 50
 count = 0
 for i in np.linspace(-3,4, SAMPLES):
-    plt.figure(figsize=(6, 5))
+    plt.figure(figsize=(10, 5))
 
-    ax = plt.subplot(1, 1, 1)
+    ax = plt.subplot(1, 2, 1)
     plt.title("Probability Density and Samples")
     plt.xlim((LOWER_LIMIT, UPPER_LIMIT))
     plt.ylim((LOWER_LIMIT, UPPER_LIMIT))
@@ -81,18 +81,18 @@ for i in np.linspace(-3,4, SAMPLES):
     plt.contourf(x, y, p, colors=('#FFFFFF', '#FEE89F', '#D0F87C', '#58F5A9', '#19E5E3', '#41B0F1', '#3C7DE4', '#2B4BE6'))
     s = [2] * 100
     plt.scatter(X_sampled[:, 0], X_sampled[:, 1], c="pink", s=s)
-    plt.xlabel('x')
-    plt.ylabel('y')
+    plt.xlabel('x (Input)')
+    plt.ylabel('y (Output)')
 
     interception_x = i
-    # plt.axvline(x=interception_x, c='r')
+    plt.axvline(x=interception_x, c='r')
 
     X_test = np.linspace(LOWER_LIMIT, UPPER_LIMIT, 100)
     cond = gmm.condition(np.array([0]), np.array([i]))
     y = cond.to_probability_density(X_test[:, np.newaxis])
     # print(np.argmax(y)*STEP + LOWER_LIMIT)
     interception_y = np.argmax(y)*STEP + LOWER_LIMIT
-    # plt.axhline(y=interception_y, c='r')
+    plt.axhline(y=interception_y, c='r')
 
     if prev:
         curr = (interception_x, interception_y)
@@ -107,19 +107,20 @@ for i in np.linspace(-3,4, SAMPLES):
         ax.add_collection(lc)
     else:
         prev = (interception_x, interception_y)
-        
-    
-    # ax = plt.subplot(1, 2, 2)
-    # title = "Conditional PDF $p(y | x = " + str(round(i, 2)) + ")$"
-    # plt.title(title)
-    # # plt.plot(X_test, y)
-    # # plt.xticks(np.arange(0, 1.0, 0.1))
-    # plt.xlim(0, 0.9)
-    # # ax.xaxis.set_ticks(np.arange(0, 1.0, 0.1))
-    # plt.plot(y, X_test)
-    # plt.xlabel('x')
-    # plt.ylabel('y')
+
+
+    ax = plt.subplot(1, 2, 2)
+    title = "Conditional PDF $p(y | x = " + str(round(i, 2)) + ")$"
+    plt.title(title)
+    # plt.plot(X_test, y)
+    # plt.xticks(np.arange(0, 1.0, 0.1))
+    plt.xlim(0, 0.9)
+    plt.text(0.7, interception_y-0.5, 'y = ' + "{:.2f}".format(round(interception_y, 2)))
+    # ax.xaxis.set_ticks(np.arange(0, 1.0, 0.1))
+    plt.plot(y, X_test)
+    plt.axhline(y=interception_y, c='r')
+    plt.xlabel('Probability Density')
+    plt.ylabel('y (Output)')
     plt.savefig('Prob/Prob. ' + str(count) + '.png')
     count += 1
     # plt.show()
-

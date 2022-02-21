@@ -60,7 +60,7 @@ x, y = np.meshgrid(np.linspace(LOWER_LIMIT, UPPER_LIMIT, 100), np.linspace(LOWER
 X_test = np.vstack((x.ravel(), y.ravel())).T
 p = gmm.to_probability_density(X_test)
 p = p.reshape(*x.shape)
-plt.contourf(x, y, p)
+plt.contourf(x, y, p, colors=('#FFFFFF', '#FEE89F', '#D0F87C', '#58F5A9', '#19E5E3', '#41B0F1', '#3C7DE4', '#2B4BE6'))
 X_sampled = gmm.sample(100)
 s = [2] * 100
 plt.scatter(X_sampled[:, 0], X_sampled[:, 1], c="pink", s=s)
